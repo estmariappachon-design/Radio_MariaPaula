@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+
+    <title>Radio 3D Funcional</title>
+</head>
+
+<body>
+
+    <a-scene cursor="rayOrigin: mouse">
+
+        <!-- Assets -->
+        <a-assets>
+
+            <!-- Modelo 3D -->
+            <a-asset-item id="modelo3d" src="https://estmariappachon-design.github.io/Radio2/scene.gltf">
+            </a-asset-item>
+
+            <!-- Canciones -->
+            <audio id="musica1" src="musica1.mp3"></audio>
+            <audio id="musica2" src="musica2.mp3"></audio>
+            <audio id="musica3" src="musica3.mp3"></audio>
+
+            <!-- Imágenes botones -->
+            <img id="playImg" src="cuadrado.png">
+            <img id="nextImg" src="derechac.png">
+            <img id="backImg" src="izquierda.png">
+
+        </a-assets>
+
+
+        <!-- Fondo -->
+        <a-sky color="#12E3D5"></a-sky>
+
+
+        <!-- Luz ambiental suave -->
+        <a-light type="ambient" color="#FFFFFF" intensity="0.6">
+        </a-light>
+
+
+        <!-- Luz superior -->
+        <a-light type="directional" position="0 5 2" rotation="-45 0 0" color="#FFFFFF" intensity="1">
+        </a-light>
+
+
+        <!-- MODELO 3D -->
+        <a-entity id="radio" gltf-model="#modelo3d" position="0 1 -5" scale="10 10 10" rotation="0 0 0">
+        </a-entity>
+
+
+        <!-- BOTÓN ATRÁS -->
+        <a-image id="btnBack" src="#backImg" position="4 13 11" scale="1 1 1" width="1" height="1" animation__hover="
+                property: scale;
+                startEvents: mouseenter;
+                dur: 200;
+                to: 1.3 1.3 1.3" animation__leave="
+                property: scale;
+                startEvents: mouseleave;
+                dur: 200;
+                to: 1 1 1">
+        </a-image>
+
+
+        <!-- BOTÓN PLAY -->
+        <a-image id="btnPlay" src="#playImg" position="6 13 11" scale="0.8 0.8 0.8" width="1" height="1"
+            animation__hover="
+                property: scale;
+                startEvents: mouseenter;
+                dur: 200;
+                to: 1 1 1" animation__leave="
+                property: scale;
+                startEvents: mouseleave;
+                dur: 200;
+                to: 0.8 0.8 0.8">
+        </a-image>
+
+
+        <!-- BOTÓN SIGUIENTE -->
+        <a-image id="btnNext" src="#nextImg" position="8 13 11" scale="1 1 1" width="1" height="1" animation__hover="
+                property: scale;
+                startEvents: mouseenter;
+                dur: 200;
+                to: 1.3 1.3 1.3" animation__leave="
+                property: scale;
+                startEvents: mouseleave;
+                dur: 200;
+                to: 1 1 1">
+        </a-image>
+
+
+        <!-- CÁMARA -->
+        <a-camera position="0 13 25">
+
+            <a-cursor></a-cursor>
+
+        </a-camera>
+
+    </a-scene>
+
+
+    <script>
+
+        // Lista de canciones
+        const canciones = [
+
+            document.querySelector("#musica1"),
+            document.querySelector("#musica2"),
+            document.querySelector("#musica3")
+
+        ];
+
+        let indiceActual = 0;
+
+
+        // Detener todas las canciones
+        function detenerTodas() {
+
+            canciones.forEach(cancion => {
+
+                cancion.pause();
+                cancion.currentTime = 0;
+
+            });
+
+        }
+
+
+        // Reproducir canción actual
+        function reproducirActual() {
+
+            detenerTodas();
+
+            canciones[indiceActual].play();
+
+        }
+
+
+        // PLAY / PAUSA
+        document
+            .querySelector("#btnPlay")
+            .addEventListener("click", () => {
+
+                const actual = canciones[indiceActual];
+
+                if (actual.paused) {
+
+                    actual.play();
+
+                } else {
+
+                    actual.pause();
+
+                }
+
+            });
+
+
+        // SIGUIENTE
+        document
+            .querySelector("#btnNext")
+            .addEventListener("click", () => {
+
+                indiceActual++;
+
+                if (indiceActual >= canciones.length) {
+
+                    indiceActual = 0;
+
+                }
+
+                reproducirActual();
+
+            });
+
+
+        // ATRÁS
+        document
+            .querySelector("#btnBack")
+            .addEventListener("click", () => {
+
+                indiceActual--;
+
+                if (indiceActual < 0) {
+
+                    indiceActual = canciones.length - 1;
+
+                }
+
+                reproducirActual();
+
+            });
+
+    </script>
+
+</body>
+
+</html>
